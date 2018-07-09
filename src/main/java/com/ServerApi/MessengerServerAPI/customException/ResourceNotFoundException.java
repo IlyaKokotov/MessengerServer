@@ -1,4 +1,4 @@
-package com.ChatBulat.BulatChatDemo.customException;
+package com.ServerApi.MessengerServerAPI.customException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

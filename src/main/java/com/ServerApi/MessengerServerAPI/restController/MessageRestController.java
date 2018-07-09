@@ -1,10 +1,10 @@
-package com.ChatBulat.BulatChatDemo.restController;
+package com.ServerApi.MessengerServerAPI.restController;
 
-import com.ChatBulat.BulatChatDemo.customException.ResourceNotFoundException;
-import com.ChatBulat.BulatChatDemo.model.Dialog;
-import com.ChatBulat.BulatChatDemo.model.Message;
-import com.ChatBulat.BulatChatDemo.repository.DialogRepository;
-import com.ChatBulat.BulatChatDemo.repository.MessageRepository;
+import com.ServerApi.MessengerServerAPI.customException.ResourceNotFoundException;
+import com.ServerApi.MessengerServerAPI.model.Dialog;
+import com.ServerApi.MessengerServerAPI.model.Message;
+import com.ServerApi.MessengerServerAPI.repository.DialogRepository;
+import com.ServerApi.MessengerServerAPI.repository.MessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,17 +25,17 @@ public class MessageRestController {
     MessageRepository messageRepository;
 
     /**
-     * Get all messages
+     * Получить все сообщения
      *
      * @return List<Message>
      */
-    @GetMapping("/getAll")
+    @GetMapping
     public List<Message> getDialogMessage() {
         return messageRepository.findAll();
     }
 
     /**
-     * Create message by dialogId in Path, and String message in request body
+     * Создать сообщение по айдишнику диалога, а также по тексту в теле запроса
      *
      * @param dialogId
      * @param message
@@ -45,31 +45,35 @@ public class MessageRestController {
     public ResponseEntity<?> createMessage(@PathVariable(value = "dialogId") Long dialogId,
                                            @Valid @RequestBody String message) {
         Message newMessage = new Message(message);
-        Dialog dialog = dialogRepository.findById(dialogId)
+        Dialog dialog = dialogRepository
+                .findById(dialogId)
                 .orElseThrow(() -> new ResourceNotFoundException("Dialog", "id", dialogId));
         newMessage.setDialog(dialog);
         messageRepository.save(newMessage);
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{dialogId}")
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{dialogId}")
                 .buildAndExpand(newMessage.getMessageId()).toUri();
         return ResponseEntity.created(location).build();
     }
 
     /**
-     * Delete message by messageId
+     * Удалить сообщение по айдишнику
      *
      * @param messageId
      * @return ResponseEntity<?>
      */
-    @DeleteMapping("/delete")
+    @DeleteMapping
     public ResponseEntity<?> deleteMessage(@Valid @RequestBody Long messageId) {
-        Message message = messageRepository.findById(messageId)
+        Message message = messageRepository
+                .findById(messageId)
                 .orElseThrow(() -> new ResourceNotFoundException("Dialog", "id", messageId));
         messageRepository.delete(message);
         return ResponseEntity.ok().build();
     }
 
     /**
-     * Update message by messageId
+     * Обновить сообщение по айдишнику
      *
      * @param messageId
      * @param newMessageText
@@ -85,8 +89,12 @@ public class MessageRestController {
 
         updatedMessage.setMessage(newMessageText);
         messageRepository.save(updatedMessage);
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                .buildAndExpand(updatedMessage.getMessageId()).toUri();
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(updatedMessage
+                        .getMessageId())
+                .toUri();
         return ResponseEntity.created(location).build();
     }
 }

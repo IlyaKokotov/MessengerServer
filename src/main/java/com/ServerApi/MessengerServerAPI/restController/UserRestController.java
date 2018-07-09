@@ -1,10 +1,10 @@
-package com.ChatBulat.BulatChatDemo.restController;
+package com.ServerApi.MessengerServerAPI.restController;
 
-import com.ChatBulat.BulatChatDemo.customException.ResourceIsAlreadyExistException;
-import com.ChatBulat.BulatChatDemo.customException.ResourceNotFoundException;
-import com.ChatBulat.BulatChatDemo.model.User;
-import com.ChatBulat.BulatChatDemo.repository.DialogRepository;
-import com.ChatBulat.BulatChatDemo.repository.UserRepository;
+import com.ServerApi.MessengerServerAPI.customException.ResourceIsAlreadyExistException;
+import com.ServerApi.MessengerServerAPI.customException.ResourceNotFoundException;
+import com.ServerApi.MessengerServerAPI.model.User;
+import com.ServerApi.MessengerServerAPI.repository.DialogRepository;
+import com.ServerApi.MessengerServerAPI.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +25,7 @@ public class UserRestController {
     DialogRepository dialogRepository;
 
     /**
-     * Get All Users
+     * Получить всех пользователей
      *
      * @return List<User></>
      */
@@ -35,12 +35,12 @@ public class UserRestController {
     }
 
     /**
-     * Create a new User
+     * Создать нового пользователя
      *
      * @param user
      * @return ResponseEntity<?>
      */
-    @PostMapping("/create")
+    @PostMapping
     public ResponseEntity<?> createUser(@Valid @RequestBody User user) {
         boolean userIsAlreadyCreate = true;
 
@@ -57,28 +57,30 @@ public class UserRestController {
     }
 
     /**
-     * Get a Single User
+     * Получить юзера по айдишнику
      *
      * @param id
      * @return User
      */
     @GetMapping("/findById/{id}")
     public User getUserById(@PathVariable(value = "id") Long id) {
-        return userRepository.findById(id)
+        return userRepository
+                .findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
     }
 
     /**
-     * Update a User
+     * Обновить юзера
      *
      * @param id
      * @param userDetails
      * @return ResponseEntity<?>
      */
-    @PutMapping("/update/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<?> updateUser(@PathVariable(value = "id") Long id,
                                         @Valid @RequestBody User userDetails) {
-        User user = userRepository.findById(id)
+        User user = userRepository
+                .findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
         user.setLogin(userDetails.getLogin());
         user.setPassword(userDetails.getPassword());
@@ -88,14 +90,15 @@ public class UserRestController {
     }
 
     /**
-     * Delete a User
+     * Удалить юзера по айдишнику
      *
      * @param id
      * @return ResponseEntity<?>
      */
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable(value = "id") Long id) {
-        User user = userRepository.findById(id)
+        User user = userRepository
+                .findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
         userRepository.delete(user);
 
@@ -103,7 +106,7 @@ public class UserRestController {
     }
 
     /**
-     * Get a isUserExist
+     * Проверить по логину, существует ли такой юзер
      *
      * @param login
      * @return ResponseEntity<?>
@@ -118,7 +121,7 @@ public class UserRestController {
     }
 
     /**
-     * Check the correctness of entered password
+     * Проверить правильность введённого пароля
      *
      * @param user
      * @return ResponseEntity<?>

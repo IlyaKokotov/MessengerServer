@@ -1,4 +1,4 @@
-package com.ChatBulat.BulatChatDemo;
+package com.ServerApi.MessengerServerAPI;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -7,7 +7,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class BulatChatDemoApplicationTests {
+public class ServerAPIApplicationTests {
 
 	@Test
 	public void contextLoads() {

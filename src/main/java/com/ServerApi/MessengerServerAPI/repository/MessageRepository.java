@@ -1,6 +1,6 @@
-package com.ChatBulat.BulatChatDemo.repository;
+package com.ServerApi.MessengerServerAPI.repository;
 
-import com.ChatBulat.BulatChatDemo.model.Message;
+import com.ServerApi.MessengerServerAPI.model.Message;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

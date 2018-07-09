@@ -1,4 +1,4 @@
-package com.ChatBulat.BulatChatDemo.model;
+package com.ServerApi.MessengerServerAPI.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;

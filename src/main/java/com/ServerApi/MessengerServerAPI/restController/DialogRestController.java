@@ -1,9 +1,9 @@
-package com.ChatBulat.BulatChatDemo.restController;
+package com.ServerApi.MessengerServerAPI.restController;
 
-import com.ChatBulat.BulatChatDemo.customException.ResourceNotFoundException;
-import com.ChatBulat.BulatChatDemo.model.Dialog;
-import com.ChatBulat.BulatChatDemo.repository.DialogRepository;
-import com.ChatBulat.BulatChatDemo.repository.UserRepository;
+import com.ServerApi.MessengerServerAPI.customException.ResourceNotFoundException;
+import com.ServerApi.MessengerServerAPI.model.Dialog;
+import com.ServerApi.MessengerServerAPI.repository.DialogRepository;
+import com.ServerApi.MessengerServerAPI.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +22,7 @@ public class DialogRestController {
     DialogRepository dialogRepository;
 
     /**
-     * Return all dialogs
+     * Получить все диалоги
      *
      * @return List<Dialog></>
      */
@@ -32,7 +32,7 @@ public class DialogRestController {
     }
 
     /**
-     * Get a User's dialogs list. Return List<Dialog>
+     * Получить диалоги пользователя
      *
      * @param id
      * @return List<Dialog></>
@@ -43,12 +43,12 @@ public class DialogRestController {
     }
 
     /**
-     * Create a dialog
+     * Создать диалог
      *
      * @param userIdList
      * @return ResponseEntity<?>
      */
-    @PostMapping("/create")
+    @PostMapping
     public ResponseEntity<?> addDialog(@Valid @RequestBody List<Long> userIdList) {
         Dialog dialog = new Dialog();
         for (Long userId : userIdList) {
@@ -60,14 +60,15 @@ public class DialogRestController {
     }
 
     /**
-     * Delete dialog by id
+     * Удалить пользователя по айдишнику
      *
      * @param id
      * @return ResponseEntity
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteDialog(@PathVariable(value = "id") Long id) {
-        Dialog dialog = dialogRepository.findById(id)
+        Dialog dialog = dialogRepository
+                .findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException
                         ("Dialog", "id", id));
         dialogRepository.delete(dialog);
@@ -75,7 +76,8 @@ public class DialogRestController {
     }
 
     /**
-     * Add a User to dialog
+     * Добавить пользователя к диалогу. Айдишник пользователя в теле запроса,
+     * айдишник диалога - в шапке запроса
      *
      * @param id
      * @param userId
@@ -84,7 +86,8 @@ public class DialogRestController {
     @PutMapping("/{id}")
     public Dialog updateDialog(@PathVariable(value = "id") Long id,
                                @Valid @RequestBody Long userId) {
-        Dialog dialog = dialogRepository.findById(id)
+        Dialog dialog = dialogRepository
+                .findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException
                         ("Dialog", "id", id));
         dialog.addUser(userRepository.getOne(userId));
